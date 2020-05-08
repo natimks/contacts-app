@@ -35,10 +35,11 @@ class App extends React.Component {
 
   onChangeSearchFilter = (event) => {
     let contactsResult = this.state.contactsStorage;
+    const filterAttibute = this.state.sort.selectedSort;
     const value = event.target.value ? event.target.value.toLowerCase() : '';
     if (value) {
       contactsResult = this.state.contactsStorage.filter(
-        (contact) => contact.name.toLowerCase().indexOf(value) >= 0
+        (contact) => contact[filterAttibute].toLowerCase().indexOf(value) >= 0
       );
       contactsResult = sortArrayByAttribute(
         contactsResult,
