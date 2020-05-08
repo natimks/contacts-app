@@ -12,4 +12,10 @@ function sortArrayByAttribute(array, attribute, isAsc) {
   return array.sort((a, b) => (a[attribute] < b[attribute] ? 1 : -1));
 }
 
-export { formatDate, sortArrayByAttribute };
+function filterArray(array, attribute, value) {
+  return array.filter(
+    (contact) => contact[attribute].toLowerCase().indexOf(value) >= 0
+  );
+}
+
+export { filterArray, formatDate, sortArrayByAttribute };

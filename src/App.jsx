@@ -5,7 +5,7 @@ import Filters from './components/Filters';
 import getContacts from './api';
 import Topbar from './components/Topbar';
 import Loading from './components/Loading';
-import { sortArrayByAttribute } from './utils';
+import { filterArray, sortArrayByAttribute } from './utils';
 
 class App extends React.Component {
   constructor(props) {
@@ -17,6 +17,7 @@ class App extends React.Component {
         selectedSort: 'name',
         asc: true,
       },
+      wordSearch: '',
       isLoading: true,
     };
   }
@@ -38,8 +39,10 @@ class App extends React.Component {
     const filterAttibute = this.state.sort.selectedSort;
     const value = event.target.value ? event.target.value.toLowerCase() : '';
     if (value) {
-      contactsResult = this.state.contactsStorage.filter(
-        (contact) => contact[filterAttibute].toLowerCase().indexOf(value) >= 0
+      contactsResult = filterArray(
+        this.state.contactsStorage,
+        filterAttibute,
+        value
       );
       contactsResult = sortArrayByAttribute(
         contactsResult,
@@ -47,18 +50,18 @@ class App extends React.Component {
         this.state.sort.asc
       );
     }
-    this.setState({ contacts: contactsResult });
+    this.setState({ contacts: contactsResult, wordSearch: value });
   };
 
   onSort = (event) => {
     const item = event.target.name;
     let asc = this.state.sort.asc;
-    console.log('clicou >' + asc);
+    let contactsArray = this.state.contactsStorage;
     if (this.state.sort.selectedSort === item) {
       asc = !asc;
-      console.log('entrou >' + asc);
     }
-    const sortedContacts = sortArrayByAttribute(this.state.contacts, item, asc);
+    contactsArray = filterArray(contactsArray, item, this.state.wordSearch);
+    const sortedContacts = sortArrayByAttribute(contactsArray, item, asc);
     this.setState({
       contacts: sortedContacts,
       sort: { selectedSort: item, asc },
